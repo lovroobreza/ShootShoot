@@ -174,10 +174,8 @@ let againScore = document.querySelector('#again-score')
 
 //SPAWN RANDOM ENEMIES
 function spawnEnemies() {
-    //spawn one in a second
-    setInterval(() => {
         //random radius of enemy
-        const radius = Math.floor(Math.random() * (60-15)) + 15            
+        const radius = Math.floor(Math.random() * (40)) + 20            
         
         //spawn enemies from random sides
         let x 
@@ -204,7 +202,7 @@ function spawnEnemies() {
         enemies.push(new Enemy(
             x, y, radius, color, velocity    
         ))
-    }, 1000 );
+
 }
 
 
@@ -216,6 +214,7 @@ function animate() {
     c.fillRect(0, 0, canvas.width, canvas.height)
     player.draw()
 
+    // removing particles when opacity is 0
     particles.forEach((particle, index) => {
         if (particle.alpha <= 0) {
             particles.splice(index, 1)
@@ -223,10 +222,11 @@ function animate() {
         particle.update()
     })
 
+    // deleting projectiles
     projectiles.forEach((projectile, index) => {
         projectile.update()
         
-        //REMOVING FROM GAME WHEN LEAVING SCREEN
+        // removing projectiles when leaving screen
         if (projectile.x + projectile.radius < 0 || 
             projectile.x - projectile.radius > canvas.width || 
             projectile.y + projectile.radius <0 || 
@@ -241,26 +241,26 @@ function animate() {
     enemies.forEach((enemy, index) => {
         enemy.update()
 
-        //DISTANCE BETWEEN PROJECTILE AND PLAYER
+        // distance between player and enemy with pyhatgorous theroeum
         const dist = Math.hypot(player.x - enemy.x, player.y - enemy.y)
+        
+        // when enemy and player touch => stop and shot end-game
         if (dist -enemy.radius - player.radius < 1) {
             cancelAnimationFrame(animationId)
             again.style.display = 'flex'
         }
         
         projectiles.forEach((projectile, projectileIndex) =>{
-            //DISTANCE BETWEEN PROJECTILE AND ENEMY
-            const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y)
+        // distance between enemy and projectile
+           const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y)
 
             if (dist -enemy.radius - projectile.radius < 1) {
-                
-               
-                //EXSPLOSIONSSSSS
-                for (let i = 0; i < 7; i++) {
+                //spawn 8 particles when you hit enemy and where you hit him
+                for (let i = 0; i <= 7; i++) {
                     particles.push(
                         new Particle(
-                            projectile.x, 
-                            projectile.y, 
+                            enemy.x, 
+                            enemy.y, 
                             Math.floor(Math.random()* 4 +2), 
                             enemy.color, 
                             {
@@ -269,8 +269,8 @@ function animate() {
                         }) )                    
                 }
 
-                if (enemy.radius -10 > 35){                    
-                    
+                //depending on radius reduce enemies when hit - gsap animation
+                if (enemy.radius -10 > 40){                    
                     gsap.to(enemy, {
                         radius:enemy.radius -10
                     })
@@ -279,7 +279,7 @@ function animate() {
                         projectiles.splice(projectileIndex,1)        
                     }, 0);
                 } else{
-                    //increase score
+                    // increase in-game and end-game score for killed enemy by its radius
                     scoreValue += Math.floor(enemy.radius)
                     score.innerHTML = scoreValue
                     againScore.innerHTML = scoreValue
@@ -291,29 +291,27 @@ function animate() {
                 }
                 }
         })
-
-
     })
 }
 
 
-//ACTIVATING PROJECTILES
+// shoot projectiles on click towards click
 window.addEventListener('click', (e) => {
 
-    //GET THE ANGLE (TRIGONOMETRY = ATAN2; X AND Y VELOCITY)
-const angle = Math.atan2(e.clientY - canvas.height / 2 , e.clientX - canvas.width / 2)
+    // getting angle of the click and calculating the velocity to move smoothly
+    const angle = Math.atan2(e.clientY - canvas.height / 2 , e.clientX - canvas.width / 2)
 
-const velocity = {
-    x: Math.cos(angle) * 5,
-    y: Math.sin(angle) * 5
-}
+    const velocity = {
+        x: Math.cos(angle) * 7,
+        y: Math.sin(angle) * 7
+    }
 
-projectiles.push(new Projectile(
-    x, y, 5, 'crimson', velocity 
-    ))
-})
+    projectiles.push(new Projectile(
+        x, y, 5, 'crimson', velocity 
+        ))
+    })
 
-//Init function when reseting the game/playing again - it resets canvas
+    //Init function when reseting the game/playing again - it resets canvas
 function init() {
     player = new Player(x,y, 30, 'crimson');
     projectiles = []
@@ -327,8 +325,11 @@ function init() {
 
 //START GAME EVENT LISTENER
 button.addEventListener('click', () => {
-    spawnEnemies()
     init()
     animate()
+    setInterval(() => {
+        spawnEnemies()    
+    }, 1000);
+    
     again.style.display = 'none'
 })
