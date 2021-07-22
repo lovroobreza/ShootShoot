@@ -47,6 +47,7 @@ body {
   margin: 0;
   text-align: center;
   color: hsl(138, 33%, 37%);
+  user-select: none;
 }
 
 .again-container #button {

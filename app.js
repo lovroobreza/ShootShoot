@@ -167,27 +167,19 @@ let scoreValue = 0
 // DOM elements for interface
 const button = document.querySelector('#button')
 const again = document.querySelector('#again')
+
+// Update the score in game and when you die
+let score = document.querySelector('#score')
 let againScore = document.querySelector('#again-score')
 
-//UPDATE THE SCORE
-let score = document.querySelector('#score')
-
-//INIT FUNCTION
-function init() {
-    player = new Player(x,y, 30, 'crimson');
-    projectiles = []
-    enemies =  []
-    particles =[]
-    scoreValue = 0
-    againScore.innerHTML = 0
-    score.innerHTML = 0
-}
-
 //SPAWN RANDOM ENEMIES
-function spawnEnemies(){
+function spawnEnemies() {
+    //spawn one in a second
     setInterval(() => {
+        //random radius of enemy
         const radius = Math.floor(Math.random() * (60-15)) + 15            
         
+        //spawn enemies from random sides
         let x 
         let y 
 
@@ -195,16 +187,18 @@ function spawnEnemies(){
              x = Math.random() < 0.5 ? 0 -radius : canvas.width + radius 
              y = Math.random() * canvas.height  
         } else {
-                x = Math.random() * canvas.width
-                y = Math.random() < 0.5 ? 0 -radius : canvas.height + radius
+            x = Math.random() * canvas.width
+            y = Math.random() < 0.5 ? 0 -radius : canvas.height + radius
         }
-
+        
+        // random hsl value for enemy color
         const color = `hsl(${Math.random()*360}, 50%, 50%)`
 
-        const angle = Math.atan2(canvas.height / 2 -y, canvas.width / 2 -x)
+        // calculating velocity for smooth movement
+        const angle = Math.atan2(canvas.height / 2 - y, canvas.width / 2 - x)
         const velocity = {
-            x: Math.cos(angle) *2,
-            y: Math.sin(angle)*2
+            x: Math.cos(angle) * 2.5,
+            y: Math.sin(angle) * 2.5
         }
     
         enemies.push(new Enemy(
@@ -218,7 +212,7 @@ function spawnEnemies(){
 let animationId
 function animate() {
     animationId = requestAnimationFrame(animate)
-    c.fillStyle = 'rgba(0,0,0,0.1)'
+    c.fillStyle = 'rgba(0,0,0,0.2)'
     c.fillRect(0, 0, canvas.width, canvas.height)
     player.draw()
 
@@ -319,11 +313,22 @@ projectiles.push(new Projectile(
     ))
 })
 
+//Init function when reseting the game/playing again - it resets canvas
+function init() {
+    player = new Player(x,y, 30, 'crimson');
+    projectiles = []
+    enemies = []
+    particles = []
+    scoreValue = 0
+    againScore.innerHTML = 0
+    score.innerHTML = 0
+}
+
 
 //START GAME EVENT LISTENER
 button.addEventListener('click', () => {
+    spawnEnemies()
     init()
     animate()
-    spawnEnemies()
     again.style.display = 'none'
 })
