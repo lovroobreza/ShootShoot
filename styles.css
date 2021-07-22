@@ -1,0 +1,61 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: #000;
+}
+
+.score-tracker {
+  position: fixed;
+  color: white;
+  width: 200px;
+  height: 100px;
+  user-select: none;
+  padding: 1em;
+}
+
+.score-tracker #score-text {
+  font-size: 3em;
+}
+
+.score-tracker #score {
+  font-size: 3em;
+  user-select: none;
+}
+
+#again {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.again-container {
+  width: 50%;
+  height: 50%;
+  background: hsl(38, 83%, 67%);
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.again-container h1 {
+  font-size: 4rem;
+  margin: 0;
+  text-align: center;
+  color: hsl(138, 33%, 37%);
+}
+
+.again-container #button {
+  width: 80%;
+  margin: 1.5em auto;
+  background: hsl(38, 83%, 27%);
+  color: white;
+  padding: 1.5em;
+  border-radius: 20px;
+  font-size: 1.75em;
+  box-shadow: 0 0 0 0 black;
+}

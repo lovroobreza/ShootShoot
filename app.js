@@ -1,16 +1,16 @@
-// CANVAS JS
+// CANVAS get and set
 const canvas = document.querySelector('canvas');
 
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
-// CONTEXT ON CANVAS
+// CANVAS context
 const c = canvas.getContext('2d');
 
-// PLAYER CLASS
+// PLAYER class
 class Player {
 
-    // PLAYER PROPRETIES
+    // PLAYER properties
     constructor(x, y, radius, color) {
         this.x = x
         this.y = y
@@ -18,7 +18,7 @@ class Player {
         this.color = color
     }  
 
-    // DRAW PLAYER
+    // PLAYER draw
     draw() {
         c.beginPath();
         c.arc(
@@ -70,10 +70,10 @@ class Projectile {
 }
  
 
-// SHOOT THE BASTARDS - ENEMIES
+// ENEMY class
 class Enemy {
 
-    //PROJECTILE PROPRETIES
+    //PROJECTILE properties
     constructor(x, y, radius, color, velocity){
         this.x = x
         this.y = y
@@ -82,7 +82,7 @@ class Enemy {
         this.velocity = velocity
     }
 
-    //DRAW PROJECTILE
+    //PROJECTILE draw
     draw() {
         c.beginPath();
         c.arc(
@@ -97,7 +97,7 @@ class Enemy {
         c.fill()
     }   
 
-    // UPDATE
+    //PROJECTILE update
     update() {
         this.draw()
         this.x = this.x + this.velocity.x
@@ -105,17 +105,18 @@ class Enemy {
     }
 }
 
-//PARTICLESSS
-const friction = 0.99;
+//PARTICLES class
+const friction = 0.98;
 class Particle {
 
-    //PARTICLE PROPRETIES
+    //PARTICLE properties
     constructor(x, y, radius, color, velocity){
         this.x = x
         this.y = y
         this.radius = radius
         this.color = color
         this.velocity = velocity
+        // set opacity
         this.alpha = 1
     }
 
@@ -140,27 +141,30 @@ class Particle {
     // UPDATE
     update() {
         this.draw()
+        // slow down partiles with friction
         this.velocity.x *= friction
         this.velocity.y *= friction
         this.x = this.x + this.velocity.x
         this.y = this.y + this.velocity.y
-        this.alpha -= 0.01
+        // particle opacity goes to 0
+        this.alpha -= 0.02
     }
 }
 
-//SELECTING MIDDLE
+// selecting center of screen
 const x = canvas.width / 2;
 const y = canvas.height / 2;
 
-//CREATING PLAYER, PROJECTILE, ENEMY
-let player = new Player(x,y, 30, 'crimson');
+//CREATING PLAYER, PROJECTILE, ENEMY and PARTICLES
+let player = new Player(x, y, 30, 'crimson');
 let projectiles = []
-let enemies =  []
-let particles =[]
+let enemies = []
+let particles = []
 
+// Track score
 let scoreValue = 0
 
-//FOR THE END
+// DOM elements for interface
 const button = document.querySelector('#button')
 const again = document.querySelector('#again')
 let againScore = document.querySelector('#again-score')
