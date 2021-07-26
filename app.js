@@ -248,6 +248,7 @@ function animate() {
         if (dist -enemy.radius - player.radius < 1) {
             cancelAnimationFrame(animationId)
             again.style.display = 'flex'
+            enemies = []
         }
         
         projectiles.forEach((projectile, projectileIndex) =>{
